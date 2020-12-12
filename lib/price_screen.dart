@@ -46,6 +46,21 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
+  int currentPrice = 0;
+  @override
+  void initState() {
+    super.initState();
+    getCurrentPrice();
+  }
+
+  void getCurrentPrice() async {
+    CoinData coinData = CoinData();
+    double price = await coinData.getCoinData('bitcoin', 'usd');
+    setState(() {
+      currentPrice = price.round();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +82,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = ? USD',
+                  '1 BTC = $currentPrice USD',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,

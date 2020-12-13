@@ -26,6 +26,7 @@ class _PriceScreenState extends State<PriceScreen> {
         onChanged: (value) {
           setState(() {
             selectedCurrency = value;
+            getCurrentPrice(selectedCurrency);
           });
         });
   }
@@ -40,7 +41,10 @@ class _PriceScreenState extends State<PriceScreen> {
     return CupertinoPicker(
       itemExtent: 32.0,
       onSelectedItemChanged: (selectedIndex) {
-        print(selectedIndex);
+        setState(() {
+          selectedCurrency = currenciesList[selectedIndex];
+          getCurrentPrice(selectedCurrency);
+        });
       },
       children: pickerList,
     );
@@ -50,12 +54,12 @@ class _PriceScreenState extends State<PriceScreen> {
   @override
   void initState() {
     super.initState();
-    getCurrentPrice();
+    getCurrentPrice('usd');
   }
 
-  void getCurrentPrice() async {
+  void getCurrentPrice(String currency) async {
     CoinData coinData = CoinData();
-    double price = await coinData.getCoinData('bitcoin', 'usd');
+    var price = await coinData.getCoinData('bitcoin', currency.toLowerCase());
     setState(() {
       currentPrice = price.round();
     });
@@ -82,7 +86,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = $currentPrice USD',
+                  '1 BTC = $currentPrice $selectedCurrency',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
@@ -98,6 +102,7 @@ class _PriceScreenState extends State<PriceScreen> {
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
             child: Platform.isIOS ? iosPicker() : androidDropDown(),
+            // child: iosPicker(),
           ),
         ],
       ),

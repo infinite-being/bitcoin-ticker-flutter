@@ -26,6 +26,7 @@ class _PriceScreenState extends State<PriceScreen> {
         onChanged: (value) {
           setState(() {
             selectedCurrency = value;
+            currentPrice = List();
             getCurrentPrice(selectedCurrency);
           });
         });
@@ -43,6 +44,7 @@ class _PriceScreenState extends State<PriceScreen> {
       onSelectedItemChanged: (selectedIndex) {
         setState(() {
           selectedCurrency = currenciesList[selectedIndex];
+          currentPrice = List();
           getCurrentPrice(selectedCurrency);
         });
       },
@@ -50,7 +52,7 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
-  int currentPrice = 0;
+  List<int> currentPrice = List();
   @override
   void initState() {
     super.initState();
@@ -59,9 +61,9 @@ class _PriceScreenState extends State<PriceScreen> {
 
   void getCurrentPrice(String currency) async {
     CoinData coinData = CoinData();
-    var price = await coinData.getCoinData('bitcoin', currency.toLowerCase());
+    var prices = await coinData.getCoinData(currency.toLowerCase());
     setState(() {
-      currentPrice = price.round();
+      currentPrice = prices;
     });
   }
 
@@ -75,25 +77,83 @@ class _PriceScreenState extends State<PriceScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = $currentPrice $selectedCurrency',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
+          Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+                  child: Card(
+                    color: Colors.lightBlueAccent,
+                    elevation: 5.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 28.0),
+                      child: Text(
+                        currentPrice.isNotEmpty
+                            ? '1 ${cryptoList[0]} = ${currentPrice[0]} $selectedCurrency'
+                            : '1 ${cryptoList[0]} = ? $selectedCurrency',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+                  child: Card(
+                    color: Colors.lightBlueAccent,
+                    elevation: 5.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 28.0),
+                      child: Text(
+                        currentPrice.isNotEmpty
+                            ? '1 ${cryptoList[1]} = ${currentPrice[1]} $selectedCurrency'
+                            : '1 ${cryptoList[1]} = ? $selectedCurrency',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+                  child: Card(
+                    color: Colors.lightBlueAccent,
+                    elevation: 5.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 28.0),
+                      child: Text(
+                        currentPrice.isNotEmpty
+                            ? '1 ${cryptoList[2]} = ${currentPrice[2]} $selectedCurrency'
+                            : '1 ${cryptoList[2]} = ? $selectedCurrency',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Container(

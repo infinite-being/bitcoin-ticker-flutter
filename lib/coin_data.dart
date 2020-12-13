@@ -29,19 +29,25 @@ const List<String> currenciesList = [
 ];
 
 const List<String> cryptoList = [
-  'BTC',
-  'ETH',
-  'LTC',
+  'Bitcoin',
+  'Ethereum',
+  'Litecoin',
 ];
 
 class CoinData {
-  Future getCoinData(String blockChain, String currency) async {
-    Response response =
-        await get('$coingeckoURL?ids=$blockChain&vs_currencies=$currency');
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)['$blockChain']['$currency'];
-    } else {
-      print(response.statusCode);
+  Future getCoinData(String currency) async {
+    List<int> cryptoPrices = List();
+    for (String blockChain in cryptoList) {
+      Response response =
+          await get('$coingeckoURL?ids=$blockChain&vs_currencies=$currency');
+      if (response.statusCode == 200) {
+        cryptoPrices.add((jsonDecode(response.body)[blockChain.toLowerCase()]
+                ['$currency'])
+            .round());
+      } else {
+        print(response.statusCode);
+      }
     }
+    return cryptoPrices;
   }
 }
